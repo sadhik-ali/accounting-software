@@ -56,8 +56,11 @@ source env/bin/activate  # On Windows, use `env\Scripts\activate`
 # Usage
 
 `Login:` Use the credentials created with createsuperuser to log in.
+
 `Setup:` Configure the Company Master and Account Master before entering transactions.
+
 `Transactions:` Start entering vouchers, journal entries, debit notes, credit notes, etc.
+
 `Reports:` Generate and review ledgers, balance sheets, and other financial reports.
 
 
