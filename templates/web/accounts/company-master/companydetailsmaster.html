@@ -1,0 +1,107 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    .popup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 1;
+        transition: opacity 0.5s ease;
+    }
+
+    .popup-content {
+        background-color: #28a745;
+        color: #ffffff;
+        font-size: 16px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+        position: relative;
+        max-width: 500px;
+        text-align: center;
+    }
+
+    .messages {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .messages li {
+        margin-bottom: 10px;
+    }
+
+    .popup.fade-out {
+        opacity: 0;
+    }
+
+    .error-msg {
+        color: red;
+        margin-top: 5px;
+    }
+</style>
+
+<link rel="stylesheet" href="{% static 'web/css/form2.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+{% if messages %}
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <ul class="messages">
+            {% for message in messages %}
+            <li><i class="fas fa-check-circle"></i> {{ message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+<div class="group-data-[sidebar-size=lg]:ltr:md:ml-vertical-menu group-data-[sidebar-size=lg]:rtl:md:mr-vertical-menu group-data-[sidebar-size=md]:ltr:ml-vertical-menu-md group-data-[sidebar-size=md]:rtl:mr-vertical-menu-md group-data-[sidebar-size=sm]:ltr:ml-vertical-menu-sm group-data-[sidebar-size=sm]:rtl:mr-vertical-menu-sm pt-[calc(theme('spacing.header')_*_1)] pb-[calc(theme('spacing.header')_*_0.8)] px-4 group-data-[navbar=bordered]:pt-[calc(theme('spacing.header')_*_1.3)] group-data-[navbar=hidden]:pt-0 group-data-[layout=horizontal]:mx-auto group-data-[layout=horizontal]:max-w-screen-2xl group-data-[layout=horizontal]:px-0 group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:ltr:md:ml-auto group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:rtl:md:mr-auto group-data-[layout=horizontal]:md:pt-[calc(theme('spacing.header')_*_1.6)] group-data-[layout=horizontal]:px-3 group-data-[layout=horizontal]:group-data-[navbar=hidden]:pt-[calc(theme('spacing.header')_*_0.9)]"
+    style=" background: linear-gradient(135deg, #ececec, #d9d8d8);">
+    <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
+        <h4 class="py-5"></h4>
+        <div class="card" style="background-color: antiquewhite; width: 93%; margin-left: 30px;">
+            <div class="card-body">
+                <h1 class="mb-4 text-15 title-h1-1">Company Master</h1>
+                <div class="grid grid-cols-1 gap-5">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        
+                        <button type="submit" value="Submit"
+                            class="text-orange-500 bg-white border-orange-500 btn hover:text-white hover:bg-orange-600 hover:border-orange-600 focus:text-white focus:bg-orange-600 focus:border-orange-600 focus:ring focus:ring-orange-100 active:text-white active:bg-orange-600 active:border-orange-600 active:ring active:ring-orange-100 dark:bg-zink-700 dark:hover:bg-orange-500 dark:ring-orange-400/20 dark:focus:bg-orange-500">Save</button>
+                        <a href="{% url 'core:company_master_list' %}"><button
+                                class="text-orange-500 bg-white border-orange-500 btn hover:text-white hover:bg-orange-600 hover:border-orange-600 focus:text-white focus:bg-orange-600 focus:border-orange-600 focus:ring focus:ring-orange-100 active:text-white active:bg-orange-600 active:border-orange-600 active:ring active:ring-orange-100 dark:bg-zink-700 dark:hover:bg-orange-500 dark:ring-orange-400/20 dark:focus:bg-orange-500"
+                                type="button"> Search</button></a>
+                        <a href="{% url 'core:company_details_master' %}"><button
+                                class="text-red-500 bg-white border-red-500 btn hover:text-white hover:bg-red-600 hover:border-red-600 focus:text-white focus:bg-red-600 focus:border-red-600 focus:ring focus:ring-red-100 active:text-white active:bg-red-600 active:border-red-600 active:ring active:ring-red-100 dark:bg-zink-700 dark:hover:bg-red-500 dark:ring-red-400/20 dark:focus:bg-red-500"
+                                type="button"> Cancel</button></a>
+                    </form>
+                </div><!--END GRID-->
+            </div>
+        </div><!--end card-->
+    </div>
+    <!-- container-fluid -->
+</div>
+
+<script>
+    function closePopup() {
+        var popup = document.getElementById("popup");
+        popup.classList.add("fade-out");
+        setTimeout(function () {
+            popup.style.display = "none";
+        }, 500); // Match the CSS transition duration
+    }
+
+    // Automatically close the popup after 3 seconds
+    setTimeout(closePopup, 3000);
+</script>
+
+{% endblock %}

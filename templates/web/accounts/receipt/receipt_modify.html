@@ -1,0 +1,118 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'web/css/style.css' %}" />
+<link href="{% static 'web/css/edit-dr-cr-note.css' %}" rel='stylesheet'>
+
+<style>
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 84vh; /* Full viewport height */
+  padding: 20px;
+  
+}
+
+.center-content {
+  background: antiquewhite; /* Background color for the form container */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 400px; /* Adjust based on your design */
+  width: 100%;
+  border: #007a9b solid 2px;
+  
+}
+
+/* Additional styling for boxes */
+.box {
+  margin-bottom: 15px;
+}
+
+.box label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.box input,
+.box select {
+  width: 60%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Styling for buttons */
+.btns {
+  display: flex;
+  gap: 10px;
+}
+
+.addbutton,
+.exitbutton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.addbutton {
+      background-color: #9b56db; /* Adjust as needed */
+    }
+    
+    .exitbutton {
+      background-color: #af5454; /* Adjust as needed */
+      width: 120px;
+    }
+    
+    .addbutton:hover {
+      background-color: blueviolet; /* Adjust as needed */
+    }
+    
+    .exitbutton:hover {
+      background-color: brown; /* Adjust as needed */
+    }
+    h3 {
+        text-align: center;
+        color :blueviolet;
+    }
+</style>
+<div class="group-data-[sidebar-size=lg]:ltr:md:ml-vertical-menu group-data-[sidebar-size=lg]:rtl:md:mr-vertical-menu group-data-[sidebar-size=md]:ltr:ml-vertical-menu-md group-data-[sidebar-size=md]:rtl:mr-vertical-menu-md group-data-[sidebar-size=sm]:ltr:ml-vertical-menu-sm group-data-[sidebar-size=sm]:rtl:mr-vertical-menu-sm pt-[calc(theme('spacing.header')_*_1)] pb-[calc(theme('spacing.header')_*_0.8)] px-4 group-data-[navbar=bordered]:pt-[calc(theme('spacing.header')_*_1.3)] group-data-[navbar=hidden]:pt-0 group-data-[layout=horizontal]:mx-auto group-data-[layout=horizontal]:max-w-screen-2xl group-data-[layout=horizontal]:px-0 group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:ltr:md:ml-auto group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:rtl:md:mr-auto group-data-[layout=horizontal]:md:pt-[calc(theme('spacing.header')_*_1.6)] group-data-[layout=horizontal]:px-3 group-data-[layout=horizontal]:group-data-[navbar=hidden]:pt-[calc(theme('spacing.header')_*_0.9)]" style="background-color: #e5e7eb;">
+    <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
+<div class="main-container">
+    <div class="center-content">
+        <h3>MODIFY RECEIPT VOUCHER</h3>
+        <div class="py-3"></div>
+        
+        <form method="get" action="{% url 'core:edit_receipt' %}" class="mb-5">
+            <div class="box">
+                <label for="Series">Select Series :</label>
+                <select name="Series" id="Series" required>
+                    <option value="" selected disabled>--Select--</option>
+                    {% for voucher in vouchers %}
+                    <option value="{{ voucher.series }}">{{ voucher.series }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <span id="series-error" style="color: red; display: none;">This combination of category and series already exists.</span>
+            <div class="box">
+                <label style="margin-right: 28px;" for="serialNo">Serial No :</label>
+                <input type="text" name="VoucherNo" id="voucher_no" required>
+            </div>
+            <div class="box btns">
+                <button type="submit" class="addbutton"><i class='bx bx-search-alt-2'></i> OK</button>
+                <a href=""><button type="button" class="exitbutton"><i class='bx bx-exit'></i> Cancel</button></a>
+            </div>
+        </form>
+        {% if error %}
+        <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}

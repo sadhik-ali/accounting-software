@@ -1,0 +1,82 @@
+input[type=text], input[type=password], input[type=url], input[type=email] , input[type=number], input[type=file], input[type=date] {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 16px 0;
+    display: block;
+    border: 1px solid #c8c3cf;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #F6F5F7;
+    font-size: 16px;
+    color: #4F4659;
+    outline: none !important;
+    transition: box-shadow 0.25s ease-in-out, background-image 0.25s !important;
+    line-height: 1.6;
+    max-height: 3.2em !important;
+    overflow: hidden !important;
+
+    }
+
+p {
+    float: left;
+    width: 50%;
+    padding: 10px;
+    box-sizing: border-box;
+    color: black;
+    
+}
+
+select {
+    width: 100%;
+    padding: 15px 16px;
+    margin: 16px 0;
+    display: block;
+    border: 1px solid #c8c3cf;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #F6F5F7;
+    font-size: 16px;
+    color: #4F4659;
+    outline: none !important;
+    transition: box-shadow 0.25s ease-in-out, background-image 0.25s !important;
+    line-height: 1.6;
+    max-height: 3.2em !important;
+    overflow: hidden !important;
+}
+
+textarea {
+    width: 100%;
+    padding: 15px 16px;
+    margin: 16px 0;
+    display: block;
+    border: 1px solid #c8c3cf;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #F6F5F7;
+    font-size: 16px;
+    color: #4F4659;
+    outline: none !important;
+    transition: box-shadow 0.25s ease-in-out, background-image 0.25s !important;
+    overflow: hidden !important;
+
+}
+
+
+.backc {
+    background-color: aliceblue;
+}
+
+
+
+.buttons {
+    float: right !important;
+    margin-top: 70px !important;
+}
+
+.buttonF {
+    background-color: chocolate !important;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 50px;
+    margin-left: 10px;
+}

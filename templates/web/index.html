@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Platform</title>
+    <link rel="stylesheet" href="{% static 'web/css/home.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+    <div class="logo" style="display: flex;">
+        <ion-icon name="calculator-outline"></ion-icon><h2>Accounting Software</h2>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>   
+            <li><a href="#resources">Resources</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <!-- Hero Section -->
+    <section id="hero" style="background-image: url({% static 'web/images/account.jpg' %});">
+        <div class="hero-content container">
+            <h1>Comprehensive Accounting Software for Your Business</h1>
+            <p>Welcome to our advanced accounting software, crafted to streamline your financial processes and boost business efficiency. Our feature-rich platform ensures accuracy, transparency, and ease of use. Explore our modules for seamless financial management.</p>
+            <a href="{% url 'core:acc_master' %}"><button class="cta-btn">Get Started</button></a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <h2>Features</h2>
+        <div class="features-container">
+            <div class="feature-card">
+                <ion-icon name="desktop-outline" class="icon" alt="Interactive Exercises"></ion-icon>
+                <h3>Account Master</h3>
+                <p>Effortlessly manage and organize all your accounts in one place. Our Account Master module provides a comprehensive overview of your financial accounts, ensuring easy access and efficient management.</p>
+            </div>
+            <div class="feature-card">
+                <ion-icon name="desktop-outline" class="icon" alt="Expert Assistance"></ion-icon>
+                <h3>Company Master</h3>
+                <p>Maintain detailed records of your company’s financial data with the Company Master module. This feature allows you to keep track of all relevant information, ensuring that your company’s financial health is always in check.</p>
+            </div>
+            <div class="feature-card">
+                <ion-icon name="download-outline" class="icon" alt="Track Your Progress"></ion-icon>
+                <h3>Voucher Configuration</h3>
+                <p>Customize and configure vouchers to suit your business needs. Our Voucher Configuration module provides flexibility and control over how you manage and record your transactions.</p>
+            </div>
+            <div class="feature-card">
+                <ion-icon name="wallet-outline" class="icon" alt="Track Your Progress"></ion-icon>
+                <h3>Debit Note</h3>
+                <p>Create and manage debit notes with ease. This module allows you to record and track all debit transactions, ensuring accurate financial records.</p>
+            </div>
+            <div class="feature-card">
+                <ion-icon name="journal-outline" class="icon" alt="Track Your Progress"></ion-icon>
+                <h3>Credit Note</h3>
+                <p>Streamline the creation and management of credit notes. Keep track of all credits issued and maintain accurate records effortlessly with this intuitive module.</p>
+            </div>
+            <div class="feature-card">
+                <ion-icon name="receipt-outline" class="icon" alt="Track Your Progress"></ion-icon>
+                <h3>Receipt</h3>
+                <p>Manage your receipts efficiently with our comprehensive Receipt module. Keep track of all incoming payments and ensure accurate financial documentation.</p>
+            </div>
+            <div class="feature-card">
+                <ion-icon name="newspaper-outline" class="icon" alt="Track Your Progress"></ion-icon>
+                <h3>Payment Voucher</h3>
+                <p>Simplify your payment process with the Payment Voucher module. Record and manage all outgoing payments, ensuring your financial transactions are documented accurately.</p>
+            </div>
+            <div class="feature-card">
+                <ion-icon name="save-outline" class="icon" alt="Track Your Progress"></ion-icon>
+                <h3>Journal Entry</h3>
+                <p>Record and manage all your journal entries in one place. Our Journal Entry module ensures that all your financial transactions are accurately documented and easily accessible.</p>
+            </div>
+            <div class="feature-card">
+                <ion-icon name="save-outline" class="icon" alt="Track Your Progress"></ion-icon>
+                <h3>Contra Entry</h3>
+                <p>Handle contra entries with precision. This module allows you to manage internal transactions between accounts effortlessly, ensuring accurate financial records.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Resources Section -->
+    <section id="resources">
+        <h2>Resources</h2>
+        <div class="resources-container">
+            <div class="resource-card">
+                <h3>Documentation</h3>
+                <p class="resource-link" onclick="window.location.href='#';">Access comprehensive guides and manuals to help you navigate and utilize our accounting software efficiently.</p>
+            </div>
+            <div class="resource-card">
+                <h3>Tutorials</h3>
+                <p class="resource-link" onclick="toggleFAQ()">Explore step-by-step tutorials designed to help you master various features and functionalities of our software.</p>
+            </div>
+            <div class="resource-card">
+                <h3>Support</h3>
+                <p class="resource-link" onclick="window.location.href='#';">Get expert assistance and troubleshooting tips from our dedicated support team to ensure you get the most out of our accounting software.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#resources">Resources</a>
+            <a href="#">Tutorials</a>
+            <a href="#">Documentation</a>
+            <a href="#">Support</a>
+        </div>
+        <div class="footer-social">
+            <a href="#"><ion-icon name="logo-github" class="icon" alt="github"></ion-icon></a>
+            <a href="#"><ion-icon name="logo-discord" class="icon" alt="discord"></ion-icon></a>
+            <a href="#"><ion-icon name="logo-linkedin" class="icon" alt="LinkedIn"></ion-icon></a>
+        </div>
+        <div class="footer-contact">
+            <p>Email: info@educationalplatform.com</p>
+            <p>Phone: +1 234 567 890</p>
+        </div>
+        <div class="newsletter-signup">
+            <input type="email" placeholder="Subscribe to our newsletter">
+            <button class="cta-btn">Subscribe</button>
+        </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('header');
+    const heroSection = document.querySelector('#hero');
+    const heroHeight = heroSection.offsetHeight;
+
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > heroHeight) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+});
+</script>
+</body>
+</html>

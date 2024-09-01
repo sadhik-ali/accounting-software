@@ -1,0 +1,162 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'web/css/receipt.css' %}">
+<link rel="stylesheet" href="{% static 'web/js/search.js' %}">
+<link rel="stylesheet" href="{% static 'web/css/style.css' %}" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<div class="group-data-[sidebar-size=lg]:ltr:md:ml-vertical-menu group-data-[sidebar-size=lg]:rtl:md:mr-vertical-menu group-data-[sidebar-size=md]:ltr:ml-vertical-menu-md group-data-[sidebar-size=md]:rtl:mr-vertical-menu-md group-data-[sidebar-size=sm]:ltr:ml-vertical-menu-sm group-data-[sidebar-size=sm]:rtl:mr-vertical-menu-sm pt-[calc(theme('spacing.header')_*_1)] pb-[calc(theme('spacing.header')_*_0.8)] px-4 group-data-[navbar=bordered]:pt-[calc(theme('spacing.header')_*_1.3)] group-data-[navbar=hidden]:pt-0 group-data-[layout=horizontal]:mx-auto group-data-[layout=horizontal]:max-w-screen-2xl group-data-[layout=horizontal]:px-0 group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:ltr:md:ml-auto group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:rtl:md:mr-auto group-data-[layout=horizontal]:md:pt-[calc(theme('spacing.header')_*_1.6)] group-data-[layout=horizontal]:px-3 group-data-[layout=horizontal]:group-data-[navbar=hidden]:pt-[calc(theme('spacing.header')_*_0.9)]">
+    <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
+<div class="container-fluid">
+    <h4 class="py-5"></h4>
+    <div class="center">
+        <h2>Edit Payment Voucher</h2>
+        <h4 class="py-5"></h4>
+
+        <form method="post" action="{% url 'core:edit_payment' %}" class="mb-5" id="editReceiptForm" onsubmit="handleSubmit(event)">
+            {% csrf_token %}
+            <input type="hidden" name="edit" value="true">
+            <input type="hidden" name="VoucherNo" value="{{ voucher_entries.0.VoucherNo }}">
+            <input type="hidden" name="Series" value="{{ voucher_entries.0.Series }}">
+
+            <div class="firstdiv">
+                <div class="series">
+                    <label for="Series">Series</label>
+                    <select name="Series" id="series" onchange="updateSerialNo()" disabled>
+                        <option value="{{ voucher_entries.0.Series }}" selected>{{ voucher_entries.0.Series }}</option>
+                    </select>
+                </div>
+                <div class="firstdivright">
+                    <label for="Headcode">Book Head</label>
+                    <select name="table_acntchild" id="table_acntchild" onchange="displayAccountDetails(this)" required>
+                        <option value="" disabled>Select</option>
+                        {% for child in table_acntchildren %}
+                            <option value="{{ child.account_master.head }}" data-account-code="{{ child.account_code }}" data-current-balance="{{ child.current_balance }}" {% if child.account_master.head == voucher_entries.0.Headcode %}selected{% endif %}>{{ child.account_master.head }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="secondediv grid-container">
+                <div class="grid-item">
+                    <label for="VoucherNo">Payment Voucher No</label>
+                    <input type="text" name="VoucherNo" style="width: 40%;" id="serial_no" readonly value="{{ voucher_entries.0.VoucherNo }}">
+                </div>
+                <div class="date grid-item">
+                    <label for="Vdate" style="padding-top: 5px;">Date : &nbsp</label>
+                    <input style="width: 50%; margin: 0;" type="date" class="newinput" name="Vdate" id="date" value="{{ voucher_entries.0.Vdate|date:'Y-m-d' }}" required>
+                </div>
+                <div class="secndedivright grid-item">
+                    <label for="Headcode">Book Code</label>
+                    <input type="text" name="Headcode" id="account_code" readonly value="{{ voucher_entries.0.Headcode }}">
+                </div>
+            </div>
+            <br>  
+            <div class="grid-item" style="justify-content: end;">
+                <label for="current_balance">Current Balance</label>
+                <input type="text" name="current_balance" id="current_balance" style="width: 16.7%;" readonly value="{{ voucher_entries.0.current_balance }}">
+            </div>
+            <br>
+            <table id="dynamicTable" style="background-color: white !important;">
+                <thead>
+                    <tr>
+                        <th>Sl No</th>
+                        <th>Head</th>
+                        <th>Narration</th>
+                        <th>Cash/RTGS.</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="dynamicRows">
+                    {% for entry in voucher_entries %}
+                        <tr class="py-1">
+                            <td style="width:10px;" ><input type="text" style="margin-left: 0px;" name="SlNo[]" value="{{ forloop.counter }}" readonly></td>
+                            <td>
+                                <select name="Accountcode[]" class="newinput" required>
+                                    {% for account in head_accounts %}
+                                        <option value="{{ account.account_code }}" {% if account.account_code == entry.Accountcode %}selected{% endif %}>{{ account.head }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input type="text" class="newinput" name="Narration[]" value="{{ entry.Narration }}" required></td>
+                            <td style="width:13%;">
+                                <select name="VType[]" class="newinput" required>
+                                    <option value="Cash" {% if entry.VType == 'Cash' %}selected{% endif %}>Cash</option>
+                                    <option value="G-PAY" {% if entry.VType == 'G-PAY' %}selected{% endif %}>G-PAY</option>
+                                    <option value="RTGS" {% if entry.VType == 'RTGS' %}selected{% endif %}>RTGS</option>
+                                </select>
+                            </td>
+                            <td style="width:10%;"><input type="number" class="newinput" name="payment[]" value="{{ entry.payment }}" step="0.01" required></td>
+                            <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Delete</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <br>
+            <div class="box btns" style="display: flex; justify-content: center;">
+
+            <button type="submit" class="addbutton"><i class='bx bx-plus-medical'></i>Submit</button>
+            <a href="{% url corepayment_modify' %}"><button type="button" class="exitbutton"><i class='bx bx-arrow-back'></i> Back</button></a>
+        </div>
+
+        </form>
+    </div>
+</div>
+</div>
+</div>
+<script>
+    function handleSubmit(event) {
+        // Handle the form submission
+        const form = document.getElementById('editReceiptForm');
+        const formData = new FormData(form);
+
+        // Validate the form data here if necessary
+        // Example: Check for non-empty fields, valid date formats, etc.
+
+        // Submit the form if validation passes
+        form.submit();
+    }
+
+    document.getElementById('addRow').addEventListener('click', function() {
+        // Add a new row to the table
+        const table = document.getElementById('dynamicRows');
+        const newRow = table.insertRow();
+
+        newRow.innerHTML = `
+            <td style="width:10px;"><input type="text" style="margin-left:0px;" name="SlNo[]" value="${table.rows.length}" readonly></td>
+            <td>
+                <select name="Accountcode[]" class="newinput" required>
+                    {% for account in head_accounts %}
+                        <option value="{{ account.account_code }}">{{ account.head }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td><input type="text" class="newinput" name="Narration[]" required></td>
+            <td style="width:13%;">
+                <select name="VType[]" class="newinput" required>
+                    <option value="Cash" {% if entry.VType == 'Cash' %}selected{% endif %}>Cash</option>
+                    <option value="RTGS" {% if entry.VType == 'RTGS' %}selected{% endif %}>RTGS</option>
+                </select>
+            </td>
+            <td style="width:10%;"><input type="number" class="newinput" name="payment[]" value="{{ entry.payment }}" step="0.01" required></td>
+            <td><button type="button" class="btn btn-danger" onclick="removeRow(this)">Delete</button></td>
+        `;
+    });
+
+    function removeRow(button) {
+        // Remove the row from the table
+        const row = button.closest('tr');
+        row.remove();
+
+        // Update the serial numbers
+        const rows = document.querySelectorAll('#dynamicRows tr');
+        rows.forEach((row, index) => {
+            row.querySelector('input[name="SlNo[]"]').value = index + 1;
+        });
+    }
+</script>
+{% endblock %}

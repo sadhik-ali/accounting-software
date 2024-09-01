@@ -1,0 +1,154 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block content %}
+
+<link href="{% static 'web/css/voucherconfig.css' %}" rel='stylesheet'>
+
+<style>
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 84vh; /* Full viewport height */
+      padding: 20px;
+      
+    }
+    
+    .center-content {
+      background: antiquewhite; /* Background color for the form container */
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      max-width: 450px; /* Adjust based on your design */
+      width: 100%;
+      border: #007a9b solid 2px;
+      
+    }
+    
+    /* Additional styling for boxes */
+    .box {
+      margin-bottom: 15px;
+    }
+    
+    .box label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .box input,
+    .box select {
+      width: 60%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    /* Styling for buttons */
+    .btns {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .addbutton,
+    .exitbutton {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+    
+    .addbutton {
+      background-color: #9b56db; /* Adjust as needed */
+    }
+    
+    .exitbutton {
+      background-color: #af5454; /* Adjust as needed */
+      width: 120px;
+    }
+    
+    .addbutton:hover {
+      background-color: blueviolet; /* Adjust as needed */
+    }
+    
+    .exitbutton:hover {
+      background-color: brown; /* Adjust as needed */
+    }
+    h3 {
+        text-align: center;
+        color :blueviolet;
+    }
+    </style>
+    <div class="group-data-[sidebar-size=lg]:ltr:md:ml-vertical-menu group-data-[sidebar-size=lg]:rtl:md:mr-vertical-menu group-data-[sidebar-size=md]:ltr:ml-vertical-menu-md group-data-[sidebar-size=md]:rtl:mr-vertical-menu-md group-data-[sidebar-size=sm]:ltr:ml-vertical-menu-sm group-data-[sidebar-size=sm]:rtl:mr-vertical-menu-sm pt-[calc(theme('spacing.header')_*_1)] pb-[calc(theme('spacing.header')_*_0.8)] px-4 group-data-[navbar=bordered]:pt-[calc(theme('spacing.header')_*_1.3)] group-data-[navbar=hidden]:pt-0 group-data-[layout=horizontal]:mx-auto group-data-[layout=horizontal]:max-w-screen-2xl group-data-[layout=horizontal]:px-0 group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:ltr:md:ml-auto group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:rtl:md:mr-auto group-data-[layout=horizontal]:md:pt-[calc(theme('spacing.header')_*_1.6)] group-data-[layout=horizontal]:px-3 group-data-[layout=horizontal]:group-data-[navbar=hidden]:pt-[calc(theme('spacing.header')_*_0.9)]" style="background-color: #e5e7eb;">
+        <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
+    <div class="main-container">
+    <div class="center-content">
+        <h3>VOUCHER CONFIGURATION</h3>
+        <div class="py-3"></div>
+        <form class="py-5" method="post" action="{% url 'core:voucher_configuration' %}">
+            {% csrf_token %}
+            <div class="box">
+                <label for="category">Category :</label>
+                <select name="category" id="category" required>
+                    <option value="" disabled selected>Select...</option>
+                    <option value="receipt">Receipt</option>
+                    <option value="payment">Payment</option>
+                    <option value="Debit Note">Debit Note</option>
+                    <option value="Credit Note">Credit Note</option>
+                </select>
+            </div>
+            <div class="box">
+                <label for="series">Series : &nbsp&nbsp&nbsp&nbsp </label>
+                <input type="text" id="series" name="series" required>
+            </div>
+            <span id="series-error" style="color: red; display: none;">This combination of category and series already exists.</span>
+            <div class="box">
+                <label for="serialNo">Serial No :</label>
+                <input type="text" id="serialNo" name="serial_no" required>
+            </div>
+            <div class="box btns">
+                <button type="submit" class="addbutton"><i class='bx bx-plus-medical'></i> Add</button>
+                <a href="{% url 'core:voucher_search' %}"><button type="button" class="addbutton"><i class='bx bx-search-alt-2'></i> Search</button></a>
+                <!-- Uncomment if needed
+                <button type="button" class="addbutton"><i class='bx bxs-edit'></i> Edit</button>
+                <button type="button" class="exitbutton"><i class='bx bx-trash'></i> Delete</button>
+                -->
+                <button type="button" class="exitbutton"><i class='bx bx-exit'></i> Exit</button>
+            </div>
+        </form>
+        
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#category, #series').on('change', function() {
+            var category = $('#category').val();
+            var series = $('#series').val();
+            if (category && series) {
+                $.ajax({
+                    url: '{% url "core:validate_voucher_configuration" %}',
+                    data: {
+                        'category': category,
+                        'series': series
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.exists) {
+                            $('#series-error').show();
+                        } else {
+                            $('#series-error').hide();
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+{% endblock %}

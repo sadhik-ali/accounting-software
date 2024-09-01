@@ -1,0 +1,216 @@
+{% extends "web/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'web/css/acc_debit_credit.css' %}">
+<link rel="stylesheet" href="{% static 'web/js/search.js' %}">
+<link rel="stylesheet" href="{% static 'web/css/style.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<div class="group-data-[sidebar-size=lg]:ltr:md:ml-vertical-menu group-data-[sidebar-size=lg]:rtl:md:mr-vertical-menu group-data-[sidebar-size=md]:ltr:ml-vertical-menu-md group-data-[sidebar-size=md]:rtl:mr-vertical-menu-md group-data-[sidebar-size=sm]:ltr:ml-vertical-menu-sm group-data-[sidebar-size=sm]:rtl:mr-vertical-menu-sm pt-[calc(theme('spacing.header')_*_1)] pb-[calc(theme('spacing.header')_*_0.8)] px-4 group-data-[navbar=bordered]:pt-[calc(theme('spacing.header')_*_1.3)] group-data-[navbar=hidden]:pt-0 group-data-[layout=horizontal]:mx-auto group-data-[layout=horizontal]:max-w-screen-2xl group-data-[layout=horizontal]:px-0 group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:ltr:md:ml-auto group-data-[layout=horizontal]:group-data-[sidebar-size=lg]:rtl:md:mr-auto group-data-[layout=horizontal]:md:pt-[calc(theme('spacing.header')_*_1.6)] group-data-[layout=horizontal]:px-3 group-data-[layout=horizontal]:group-data-[navbar=hidden]:pt-[calc(theme('spacing.header')_*_0.9)]">
+    <div class="container-fluid group-data-[content=boxed]:max-w-boxed mx-auto">
+
+        <h4 class="py-5"></h4>
+        <div class="center">
+            <h2>Debit Note</h2>
+            <h4 class="py-5"></h4>
+
+            <form method="post" action="">
+                {% csrf_token %}
+                <div class="firstdiv">
+                    <div class="firstdivright">
+                        <label for="series">Series</label>
+                        <select style="width: 60%;" name="series" id="series" onchange="updateSerialNumber()" required {% if series_disabled %}disabled{% endif %}>
+                            <option value="" selected disabled>--Select--</option>
+                            {% for option in series_options %}
+                            <option id="serial_no_to_delete" value="{{ option.series }}" data-serial="{{ option.serial_no }}" {% if option.series == series %}selected{% endif %}>{{ option.series }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="firstdivright">
+                        <label for="serial_no" style="margin-right: 3px;">Serial No</label>
+                        <input style="width: 50%; margin: 0;" type="text" class="newinput" name="serial_no" id="serial_no" value="{{ serial_no }}" readonly>
+                    </div>
+                    <div class="firstdivright">
+                        <label style="margin-right: 3px;" for="date">Date</label>
+                        <input style="width: 50%; margin: 0;" type="date" class="newinput" name="date" id="date" {% if matched_note_dr %}value="{{ matched_note_dr.ndate }}" {% endif %} required>
+                    </div>
+                    
+                </div>
+
+                <br><br><br>
+
+                <table id="dynamicTable" style="background-color: white !important;">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Head</th>
+                            <th>Narration</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="py-1">
+                            <td style="width: 2%;">1</td>
+                            <td style="width: 30%;">
+                                <select name="head1" id="head1" class="lefttext" onchange="updateAccountCode(this)" required>
+                                    {% if matched_note_dr %}
+                                        <option value="{{ matched_note_dr.accountcode }}" selected>{{ matched_note_dr.head }}</option>
+                                    {% else %}
+                                        <option value="" selected disabled>---select---</option>
+                                    {% endif %}
+                                    {% for head_option in head_options %}
+                                        <option value="{{ head_option.account_code }}">{{ head_option.head }}</option>
+                                    {% endfor %}
+                                </select>
+                                
+                            </td>
+                            <td style="width: 25%;"><input type="text" class="newinputt" name="narration1" id="narration1" {% if matched_note_dr %}value="{{ matched_note_dr.narration }}" {% endif %}></td>
+                            <td style="width: 9%;"><input type="text" class="newinput" name="debit1" id="debit1" oninput="updateCreditAndTotal()" {% if matched_note_dr %}value="{{ matched_note_dr.dramount }}" {% endif %}></td>
+                            <td style="width: 9%;"><input type="text" class="newinput" name="credit1" id="credit1" readonly></td>
+                        </tr>
+                        <tr class="py-1">
+                            <td>2</td>
+                            <td style="width: 30%;">
+                                <select name="head2" id="head2" class="lefttext" onchange="updateAccountCode(this)" required>
+                                    {% if matched_note_cr %}
+                                        <option value="{{ matched_note_cr.accountcode }}" selected>{{ matched_note_cr.head }}</option>
+                                    {% else %}
+                                        <option value="" selected disabled>---select---</option>
+                                    {% endif %}
+                                    {% for head_option in head_options %}
+                                        <option value="{{ head_option.account_code }}">{{ head_option.head }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="width: 25%;"><input type="text" class="newinputt" name="narration2" id="narration2" {% if matched_note_cr %}value="{{ matched_note_cr.narration }}" {% endif %}></td>
+                            <td style="width: 9%;"><input type="text" class="newinput" name="debit2" id="debit2" readonly></td>
+                            <td style="width: 9%;"><input type="text" class="newinput" name="credit2" id="credit2" {% if matched_note_cr %}value="{{ matched_note_cr.cramount }}" {% endif %} readonly></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br><br><br>
+
+                <div class="lastdiv">
+                    <div class="series">
+                    </div>
+                    <div class="lastdivright">
+                        <label for="total_amount">Total Amount</label>
+                        <input style="margin-right: 55px; width: 25%; text-align: center; background-color: rgb(86, 251, 251);" type="text" name="total_amount" id="total_amount" {% if matched_note_dr %}value="{{ matched_note_dr.dramount }}" {% endif %} readonly>
+                    </div>
+                </div>
+
+                <br><br><br>
+                <div class="box btns" style="display: flex; justify-content: center;">
+                   
+                   
+                    {% if matched_note_cr and matched_note_dr %}
+                    <button type="submit" class="addbutton"><i class='bx bxs-edit'></i> Save</button>
+                    <a href="{% url 'core:account_debit_note' %}"><button type="button" class="exitbutton"><i class='bx bx-exit'></i> Cancel</button></a>
+                    <a href="{% url 'core:delete_debit_note' matched_note_cr.id matched_note_dr.noteno %}" id="deleteLink">
+                        <button type="button" class="exitbutton" onclick="confirmDelete(event)">
+                            <i class='bx bx-trash'></i> Delete
+                        </button>
+                    </a>
+                    
+
+                    
+                {% else %}
+                    <button type="submit" class="addbutton"><i class='bx bx-plus-medical'></i> Save</button>
+                    <a href=""><button type="button" class="exitbutton"><i class='bx bx-exit'></i> Clear</button></a>
+                    <a href="{% url 'core:account_debit_table' %}"><button type="button" class="addbutton"><i class='bx bx-search-alt-2'></i> Search</button></a>
+                {% endif %}
+                                  <!-- <button type="submit" class="addbutton"><i class='bx bxs-edit'></i> Edit</button> -->
+                    <!-- <button type="button" class="exitbutton"><i class='bx bx-trash'></i> Delete</button> -->
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <!-- container-fluid -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let dateInput = document.getElementById('date');
+        // Assuming matched_note_dr is set from the backend
+        let defaultDate = "{{ matched_note_dr.ndate }}" || new Date().toISOString().split('T')[0];
+        dateInput.value = defaultDate;
+    
+        // Check if there are any messages from the backend
+        {% if messages %}
+        {% for message in messages %}
+        Swal.fire({
+            title: "{{ message.tags|capfirst }}",
+            text: "{{ message }}",
+            icon: "{{ message.tags }}",
+            confirmButtonText: 'OK'
+        });
+        {% endfor %}
+        {% endif %}
+    });
+
+    function updateSerialNumber() {
+        let seriesSelect = document.getElementById('series');
+        let serialNoInput = document.getElementById('serial_no');
+        let selectedOption = seriesSelect.options[seriesSelect.selectedIndex];
+        serialNoInput.value = selectedOption.dataset.serial;
+    }
+
+    function updateAccountCode(selectElement) {
+        let selectedOption = selectElement.options[selectElement.selectedIndex];
+        let narrationInput = selectElement.id.replace('head', 'narration');
+        let debitInput = selectElement.id.replace('head', 'debit');
+        let creditInput = selectElement.id.replace('head', 'credit');
+
+        document.getElementById(narrationInput).value = selectedOption.dataset.narration || '';
+        document.getElementById(debitInput).value = selectedOption.dataset.dramount || '';
+        document.getElementById(creditInput).value = selectedOption.dataset.cramount || '';
+        updateCreditAndTotal();
+    }
+
+    function updateCreditAndTotal() {
+        let debit1 = parseFloat(document.getElementById('debit1').value) || 0;
+        let debit2 = parseFloat(document.getElementById('debit2').value) || 0;
+        let total = debit1 + debit2;
+        document.getElementById('total_amount').value = total.toFixed(2);
+        document.getElementById('credit2').value = total.toFixed();
+        document.getElementById('debit1').value = total.toFixed();
+
+
+    }
+</script>
+
+<script>
+    function confirmDelete(event) {
+        event.preventDefault(); // Prevent the default anchor action
+        
+        // Use SweetAlert for confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this item!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // User confirmed deletion, proceed with the deletion
+                var deleteLink = document.getElementById('deleteLink');
+                if (deleteLink) {
+                    window.location.href = deleteLink.href; // Navigate to the delete URL
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // User cancelled, do nothing
+               
+            }
+        });
+    }
+</script>
+
+{% endblock %}
