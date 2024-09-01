@@ -35,6 +35,34 @@ This project is a full-featured accounting software application built using Pyth
    python3 -m venv env
 source env/bin/activate  # On Windows, use `env\Scripts\activate`
 
-   
+4. Install the required packages:
+   ```bash
+   pip install -r requirements.txt
+
+5. Run migrations:
+   ```bash
+   python manage.py migrate
+
+6. Create a superuser:
+   ```bash
+   python manage.py createsuperuser
+
+7. Run the development server:
+   ```bash
+   python manage.py runserver
+
+8. Access the application in your web browser at http://localhost:8000.
+
+# Usage
+
+`Login:` Use the credentials created with createsuperuser to log in.
+`Setup:` Configure the Company Master and Account Master before entering transactions.
+`Transactions:` Start entering vouchers, journal entries, debit notes, credit notes, etc.
+`Reports:` Generate and review ledgers, balance sheets, and other financial reports.
+
+
+# Contact
+
+For any queries or support, please contact sadhikali0867@gmail.com.
 
    
